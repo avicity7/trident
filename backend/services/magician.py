@@ -22,6 +22,11 @@ def GetAllMagicians():
   r = cur.fetchall()
   return r
 
+def GetState(user_id):
+  cur.execute("GET * FROM magician WHERE user_id = %s", [user_id])
+  r = cur.fetchone()
+  return r
+
 def UpdateMagicianHealth(uid, value):
   cur.execute("SELECT hp FROM magician WHERE user_id = %s", [uid])
   hp = cur.fetchone()
@@ -30,6 +35,6 @@ def UpdateMagicianHealth(uid, value):
   return "OK"
 
 def ResetMagicians(uid_1, uid_2):
-  cur.execute("UPDATE magician SET hp = 100 WHERE user_id = %s OR %s", (uid_1, uid_2))
+  cur.execute("UPDATE magician SET hp = 100, psions = 100 WHERE user_id = %s OR %s", (uid_1, uid_2))
   conn.commit()
   return "OK"
