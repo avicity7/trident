@@ -1,5 +1,4 @@
 from flask import request, Blueprint
-from __main__ import app
 import services.magician
 
 magician = Blueprint('magician', __name__, url_prefix='/magician') 
@@ -24,7 +23,12 @@ def UpdateMagicianHealth():
   uid = req['uid']
   value = req['value']
   
-  return services.magician.CreateMagician(uid, value)
+  return services.magician.UpdateMagicianHealth(uid, value)
+
+@magician.route('/get-state', methods=["GET"])
+def GetState():
+  user_id = request.args.get("user_id")
+  return services.magician.GetState(user_id)
 
 @magician.route('/reset-magicians', methods=["POST"])
 def ResetMagicians():
@@ -33,4 +37,4 @@ def ResetMagicians():
   uid_1 = req['uid_1']
   uid_2 = req['uid_2']
   
-  return services.magician.CreateMagician(uid_1, uid_2)
+  return services.magician.ResetMagicians(uid_1, uid_2)

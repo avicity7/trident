@@ -12,3 +12,9 @@ def LinkDevice():
   uid = req["uid"]
   
   return services.cad.LinkDevice(cad_id, uid)
+
+@cad.route('get-link', methods=["GET"])
+def GetLink():
+  cad_id = request.args.get("cad_id")
+
+  return services.cad.GetLink(cad_id)
