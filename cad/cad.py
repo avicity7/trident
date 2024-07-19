@@ -195,16 +195,18 @@ def main():
         processEvent()
       else:
         readNumpad()
-        if inp[-1] == "#":
-          createEvent()
+        if inp != "":
+          if inp[-1] == "#":
+            createEvent()
 
     elif sentBattle:
       display("ENTER CODE", inp)
       readNumpad()
-      if inp[-1] == "A":
-        acceptBattle()
-      elif inp[-1] == "D":
-        sentBattle = False
+      if inp != "":
+        if inp[-1] == "A":
+          acceptBattle()
+        elif inp[-1] == "D":
+          sentBattle = False
 
     else:
       display("PRESS A TO", "START A BATTLE")
