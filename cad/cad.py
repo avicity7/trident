@@ -207,8 +207,9 @@ def main():
     else:
       display("PRESS A TO", "START A BATTLE")
       readNumpad()
-      if inp[-1] == "A":
-        sendBattle()
+      if inp != "":
+        if inp[-1] == "A":
+          sendBattle()
       else:
         tx = processIRRemote()
         if tx == "Source":
