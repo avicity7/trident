@@ -79,12 +79,15 @@ def checkInBattle():
     refreshMagicianState()
     
 
+ot1 = ""
+ot2 = ""
 def display(t1, t2=""):
-  lcd.clear()
-  lcd.cursor_position(0, 0)# column,row
-  lcd.message = t1
-  lcd.cursor_position(0, 1)
-  lcd.message = t2
+  if t1 != ot1 or t2 != ot2:
+    lcd.clear()
+    lcd.cursor_position(0, 0)# column,row
+    lcd.message = t1
+    lcd.cursor_position(0, 1)
+    lcd.message = t2
 
 def readLine(line, characters):
 	global inp
