@@ -169,7 +169,7 @@ def createEvent():
   code = inp[:-1]
   r = requests.get(f'{backend_uri}/event/get-event-type?event_id={code}')
   res = r.json()
-  obj = {"event_id": code, "emitter": uid, "battle_id": battle_id}
+  obj = {"p2": uid}
   if len(res) > 0:
     r = requests.post(f'{backend_uri}/event/create-event', json=obj)
     os.system('irsend SEND_ONCE epson Power')
