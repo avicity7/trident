@@ -1,3 +1,4 @@
+from __main__ import socketio
 import config.db
 import random
 import services.magician
