@@ -19,3 +19,12 @@ def CreateEvent():
   emitter = req["emitter"]
 
   return services.event.CreateEvent(battle_id, event_id, emitter)
+
+@event.route('/process-event', methods=["POST"])
+def CreateEvent():
+  req = request.get_json()
+
+  battle_id = req["battle_id"]
+  uid = req["uid"]
+
+  return services.event.ProcessEvent(battle_id, uid)

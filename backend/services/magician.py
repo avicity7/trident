@@ -25,7 +25,7 @@ def GetAllMagicians():
   return r
 
 def GetState(user_id):
-  cur.execute("SELECT * FROM magician WHERE user_id = %s", [user_id])
+  cur.execute("SELECT username, hp, psions FROM magician WHERE user_id = %s", [user_id])
   r = cur.fetchall()
   return r
 

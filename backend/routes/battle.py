@@ -16,9 +16,9 @@ def CreateBattle():
 def AcceptBattle():
   req = request.get_json()
 
-  battle_id = req["battle_id"]
+  confirmation = req["confirmation"]
 
-  return services.battle.AcceptBattle(battle_id)
+  return services.battle.AcceptBattle(confirmation)
 
 @battle.route('/get-current-battle', methods=["GET"])
 def GetCurrentBattle():

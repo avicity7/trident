@@ -53,12 +53,15 @@ lcd = characterlcd.Character_LCD_Mono(
 )
 
 inBattle = False
+sentBattle = False
 backend_uri = os.environ["BACKEND_URI"]
 cad_id = os.environ["CAD_ID"]
 uid = ""
 battle_id = ""
 
 inp = ""
+hp = 100
+psions = 100
 
 def getUserId():
   global uid 
@@ -68,9 +71,10 @@ def getUserId():
 def checkInBattle():
   global inBattle, battle_id
   r = requests.get(f'{backend_uri}/battle/get-current-battle?uid={uid}')
-  p = r.json()
+  p = r.json()[0]
   battle_id = p[0]
   inBattle = len(p) > 0
+  if inBattle: refreshMagicianState()
 
 def display(t1, t2):
   lcd.clear()
@@ -119,6 +123,14 @@ def ProcessIRRemote():
     
     return command
 
+def refreshMagicianState():
+  global hp, psions
+  r = requests.get(f'{backend_uri}/magician/get-state?user_id={uid}')
+  data = r.json()[0]
+  hp = data[0]
+  psions = data[1]
+
+
 getUserId()
 checkInBattle()
 
@@ -127,19 +139,45 @@ while True:
     with socketio.SimpleClient() as sio:
       sio.connect(backend_uri)
       message = sio.receive()
-      if (message[0] == "refresh"):
-        print("Calcluate State")
+      if (message[0] == uid):
+        refreshMagicianState()
+        if hp <= 0:
+          display("YOU LOST")
+          time.sleep(10)
+          inBattle = False
+        else:
+          display(f'HP: {hp}', f'Psions: {psions}')
+      elif (message[0] == uid + "win"):
+        display("YOU WIN")
+        time.sleep(10)
+        inBattle = False
       else:
-        readNumpad()
-        if inp[-1] == "#":
-          code = inp[:-1]
-          r = requests.get(f'{backend_uri}/event/get-event-type?event_id={code}')
-          res = r.json()
-          obj = {"event_id": code, "emitter": uid, "battle_id": battle_id}
-          if len(res) > 0:
-            r = requests.post(f'{backend_uri}/event/create-event', json=obj)
-          
-          inp = ""
+        tx = ProcessIRRemote()
+        if tx == "Power":
+          obj = {"battle_id": battle_id, "uid": uid}
+          r = requests.post(f'{backend_uri}/event/process-event', json=obj)
+        else:
+          readNumpad()
+          if inp[-1] == "#":
+            code = inp[:-1]
+            r = requests.get(f'{backend_uri}/event/get-event-type?event_id={code}')
+            res = r.json()
+            obj = {"event_id": code, "emitter": uid, "battle_id": battle_id}
+            if len(res) > 0:
+              r = requests.post(f'{backend_uri}/event/create-event', json=obj)
+              os.system('irsend SEND_ONCE epson Power')
+            else:
+              display("INCORRECT MAGIC", "SEQUENCE")
+
+            inp = ""
+  elif sentBattle:
+    display("ENTER BATTLE CODE", inp)
+    readNumpad()
+    if inp[-1] == "A":
+      obj = {"confirmation", inp[:-1]}  
+      requests.post(f'{backend_uri}/battle/accept-battle', json=obj)
+      checkInBattle()
+      sentBattle = False
   else:
     with socketio.SimpleClient() as sio:
       sio.connect(backend_uri)
@@ -147,13 +185,19 @@ while True:
       if (message[0] == cad_id):
         checkInBattle()
       else:
+        display("PRESS A TO", "START A BATTLE")
         readNumpad()
-        if inp[-1] == "B":
-          os.system('irsend SEND_ONCE epson Power')
+        if inp[-1] == "A":
+          os.system('irsend SEND_ONCE epson Source')
+
+          inp = ""
+          sentBattle = True
         else:
-          command = ProcessIRRemote()
-          if command == "Source":
+          tx = ProcessIRRemote()
+          if tx == "Source":
             obj = {"p2": uid}
             r = requests.post(f'{backend_uri}/battle/create-battle', json=obj)
-            data = r.json()
+            data = r.json()[0]
             display("INCOMING BATTLE", data[1])
+
+            inp = ""

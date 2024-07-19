@@ -13,9 +13,14 @@ def GetEventType(event_id):
 def CreateEvent(battle_id, event_id, emitter):
   cur.execute("SELECT hp_effect, psion_cost FROM cad_event_type WHERE event_id = %s", [event_id])
   r = cur.fetchall()[0]
+  cur.execute("INSERT INTO cad_event(battle_id, event_id, emitter) VALUES (%s, %s, %s)", [battle_id, event_id, emitter])
+
+def ProcessEvent(battle_id, uid):
+  cur.execute("SELECT hp_effect, psion_cost, emitter FROM cad_event ce JOIN cad_event_type cet ON ce.event_id = cet.event_id JOIN battle b ON ce.battle_id = b.battle_id WHERE b.battle_id = %s & (p1 = %s OR p2 = %s) ORDER BY timestamp DESC", [battle_id, uid, uid])
+  r = cur.fetchall()[0]
   hp_effect = r[0]
   psion_cost = r[1]
-  cur.execute("INSERT INTO cad_event(battle_id, event_id, emitter) VALUES (%s, %s, %s)", [battle_id, event_id, emitter])
+  emitter = r[2]
 
   cur.execute("SELECT psions FROM magician WHERE user_id = %s", [emitter])
   r = cur.fetchall()[0]
@@ -44,4 +49,5 @@ def CreateEvent(battle_id, event_id, emitter):
   
   conn.commit()
   socketio.emit(receiver)
+  socketio.emit(emitter + "win")
   return "OK"
