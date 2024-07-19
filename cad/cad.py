@@ -134,7 +134,7 @@ def processIRRemote():
 def refreshMagicianState():
   global hp, psions, inBattle
   r = requests.get(f'{backend_uri}/magician/get-state?user_id={uid}')
-  data = r.json()[0]
+  data = r.json()
   hp = data[0]
   psions = data[1]
   if hp <= 0:
