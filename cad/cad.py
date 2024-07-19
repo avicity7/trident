@@ -186,9 +186,9 @@ getUserId()
 checkInBattle()
 
 while True:
-  if inBattle:
-    with socketio.SimpleClient() as sio:
-      sio.connect(backend_uri)
+  with socketio.SimpleClient() as sio:
+    sio.connect(backend_uri)
+    if inBattle:
       message = sio.receive()
       if (message[0] == uid):
         refreshMagicianState()
@@ -205,15 +205,13 @@ while True:
           if inp[-1] == "#":
             createEvent()
 
-  elif sentBattle:
-    display("ENTER BATTLE CODE", inp)
-    readNumpad()
-    if inp[-1] == "A":
-      acceptBattle()
+    elif sentBattle:
+      display("ENTER BATTLE CODE", inp)
+      readNumpad()
+      if inp[-1] == "A":
+        acceptBattle()
 
-  else:
-    with socketio.SimpleClient() as sio:
-      sio.connect(backend_uri)
+    else:
       message = sio.receive()
       if (message[0] == cad_id):
         checkInBattle()
