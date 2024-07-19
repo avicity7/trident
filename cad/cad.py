@@ -71,10 +71,12 @@ def getUserId():
 def checkInBattle():
   global inBattle, battle_id
   r = requests.get(f'{backend_uri}/battle/get-current-battle?uid={uid}')
-  p = r.json()[0]
-  battle_id = p[0]
-  inBattle = len(p) > 0
-  if inBattle: refreshMagicianState()
+  data = r.json()
+  if len(data) > 0:
+    battle_id = data[0][0]
+    inBattle = True
+    refreshMagicianState()
+    
 
 def display(t1, t2=""):
   lcd.clear()
