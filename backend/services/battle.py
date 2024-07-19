@@ -24,14 +24,12 @@ def GetCurrentBattle(uid):
 
 def AcceptBattle(confirmation, uid):
   try: 
-    cur.execute("SELECT p1, p2 FROM battle WHERE confirmation = %s", [confirmation])
+    cur.execute("SELECT p2 FROM battle WHERE confirmation = %s", [confirmation])
     r = cur.fetchall()
-    p1 = r[0][0]
-    p2 = r[0][1]
+    p2 = r[0][0]
     cur.execute("UPDATE battle SET p1 = %s, accepted = true, confirmation = 0 WHERE confirmation = %s", [uid, confirmation])
     conn.commit()
 
-    socketio.emit(p1)
     socketio.emit(p2)
 
     return ["OK"]

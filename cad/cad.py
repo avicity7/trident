@@ -246,5 +246,5 @@ with socketio.SimpleClient() as sio:
       time.sleep(10)
       inBattle = False
   else:
-    if (message[0] == cad_id):
+    if (message[0] == uid):
       checkInBattle()
