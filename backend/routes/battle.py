@@ -17,6 +17,7 @@ def AcceptBattle():
   req = request.get_json()
 
   confirmation = req["confirmation"]
+  uid= req["uid"]
 
   return services.battle.AcceptBattle(confirmation)
 

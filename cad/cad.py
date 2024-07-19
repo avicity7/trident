@@ -163,6 +163,7 @@ def acceptBattle():
   else:
     display("WRONG BATTLE", "CODE")
     time.sleep(2)
+    sentBattle = False
 
 def createEvent():
   code = inp[:-1]
