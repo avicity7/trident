@@ -21,18 +21,21 @@ def GetCurrentBattle(uid):
 
   return r
 
-def AcceptBattle(confirmation):
-  cur.execute("SELECT p1, p2 FROM battle WHERE confirmation = %s", [confirmation])
-  r = cur.fetchall()
-  p1 = r[0][0]
-  p2 = r[0][1]
-  cur.execute("UPDATE battle SET accepted = true, confirmation = 0 WHERE confirmation = %s", [confirmation])
-  conn.commit()
+def AcceptBattle(confirmation, uid):
+  try: 
+    cur.execute("SELECT p1, p2 FROM battle WHERE confirmation = %s", [confirmation])
+    r = cur.fetchall()
+    p1 = r[0][0]
+    p2 = r[0][1]
+    cur.execute("UPDATE battle SET p1 = %s, accepted = true, confirmation = 0 WHERE confirmation = %s", [uid, confirmation])
+    conn.commit()
 
-  socketio.emit(p1)
-  socketio.emit(p2)
+    socketio.emit(p1)
+    socketio.emit(p2)
 
-  return "OK"
+    return "OK"
+  except:
+    return "ERROR"
 
 def EndBattle(battle_id, winner, p1, p2):
   values = [winner, battle_id]

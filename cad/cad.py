@@ -78,7 +78,7 @@ def checkInBattle():
 
 def display(t1, t2):
   lcd.clear()
-  lcd.cursor_position(0, 0)# coloumn,row
+  lcd.cursor_position(0, 0)# column,row
   lcd.message = t1
   if t2:
     lcd.cursor_position(0, 1)
@@ -107,7 +107,7 @@ def readNumpad():
   readLine(L3, ["7","8","9","C"])
   readLine(L4, ["*","0","#","D"])
 
-def ProcessIRRemote():
+def processIRRemote():
   try:
     keypress = conn.readline(.0001)
   except:
@@ -124,11 +124,61 @@ def ProcessIRRemote():
     return command
 
 def refreshMagicianState():
-  global hp, psions
+  global hp, psions, inBattle
   r = requests.get(f'{backend_uri}/magician/get-state?user_id={uid}')
   data = r.json()[0]
   hp = data[0]
   psions = data[1]
+  if hp <= 0:
+    display("YOU LOST")
+    time.sleep(10)
+    inBattle = False
+  else:
+    display(f'HP: {hp}', f'Psions: {psions}')
+
+def createBattle():
+  global inp
+  obj = {"p2": uid}
+  r = requests.post(f'{backend_uri}/battle/create-battle', json=obj)
+  data = r.json()[0]
+  display("INCOMING BATTLE", data[1])
+
+  inp = ""
+
+def acceptBattle():
+  global sentBattle, uid
+  obj = {"confirmation": inp[:-1], "uid": uid}  
+  r = requests.post(f'{backend_uri}/battle/accept-battle', json=obj)
+  if r == "OK":
+    checkInBattle()
+    sentBattle = False
+  else:
+    display("WRONG BATTLE", "CODE")
+    time.sleep(2)
+
+def createEvent():
+  code = inp[:-1]
+  r = requests.get(f'{backend_uri}/event/get-event-type?event_id={code}')
+  res = r.json()
+  obj = {"event_id": code, "emitter": uid, "battle_id": battle_id}
+  if len(res) > 0:
+    r = requests.post(f'{backend_uri}/event/create-event', json=obj)
+    os.system('irsend SEND_ONCE epson Power')
+  else:
+    display("INCORRECT MAGIC", "SEQUENCE")
+
+  inp = ""
+
+def processEvent():
+  obj = {"battle_id": battle_id, "uid": uid}
+  requests.post(f'{backend_uri}/event/process-event', json=obj)
+
+def sendBattle():
+  global inp, sentBattle 
+  os.system('irsend SEND_ONCE epson Source')
+
+  inp = ""
+  sentBattle = True
 
 
 getUserId()
@@ -141,43 +191,25 @@ while True:
       message = sio.receive()
       if (message[0] == uid):
         refreshMagicianState()
-        if hp <= 0:
-          display("YOU LOST")
-          time.sleep(10)
-          inBattle = False
-        else:
-          display(f'HP: {hp}', f'Psions: {psions}')
       elif (message[0] == uid + "win"):
         display("YOU WIN")
         time.sleep(10)
         inBattle = False
       else:
-        tx = ProcessIRRemote()
+        tx = processIRRemote()
         if tx == "Power":
-          obj = {"battle_id": battle_id, "uid": uid}
-          r = requests.post(f'{backend_uri}/event/process-event', json=obj)
+          processEvent()
         else:
           readNumpad()
           if inp[-1] == "#":
-            code = inp[:-1]
-            r = requests.get(f'{backend_uri}/event/get-event-type?event_id={code}')
-            res = r.json()
-            obj = {"event_id": code, "emitter": uid, "battle_id": battle_id}
-            if len(res) > 0:
-              r = requests.post(f'{backend_uri}/event/create-event', json=obj)
-              os.system('irsend SEND_ONCE epson Power')
-            else:
-              display("INCORRECT MAGIC", "SEQUENCE")
+            createEvent()
 
-            inp = ""
   elif sentBattle:
     display("ENTER BATTLE CODE", inp)
     readNumpad()
     if inp[-1] == "A":
-      obj = {"confirmation", inp[:-1]}  
-      requests.post(f'{backend_uri}/battle/accept-battle', json=obj)
-      checkInBattle()
-      sentBattle = False
+      acceptBattle()
+
   else:
     with socketio.SimpleClient() as sio:
       sio.connect(backend_uri)
@@ -188,16 +220,8 @@ while True:
         display("PRESS A TO", "START A BATTLE")
         readNumpad()
         if inp[-1] == "A":
-          os.system('irsend SEND_ONCE epson Source')
-
-          inp = ""
-          sentBattle = True
+          sendBattle()
         else:
-          tx = ProcessIRRemote()
+          tx = processIRRemote()
           if tx == "Source":
-            obj = {"p2": uid}
-            r = requests.post(f'{backend_uri}/battle/create-battle', json=obj)
-            data = r.json()[0]
-            display("INCOMING BATTLE", data[1])
-
-            inp = ""
+            createBattle()
