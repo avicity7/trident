@@ -88,6 +88,8 @@ def display(t1, t2=""):
     lcd.message = t1
     lcd.cursor_position(0, 1)
     lcd.message = t2
+    ot1 = t1
+    ot2 = t2
 
 def readLine(line, characters):
 	global inp
