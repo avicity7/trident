@@ -218,15 +218,16 @@ def main():
           sentBattle = False
 
     else:
-      display("PRESS A TO", "START A BATTLE")
-      readNumpad()
-      if inp != "":
-        if inp[-1] == "A":
-          sendBattle()
-      else:
-        tx = processIRRemote()
-        if tx == "Source":
-          createBattle()
+      if ot1 != "INCOMING BATTLE":
+        display("PRESS A TO", "START A BATTLE")
+        readNumpad()
+        if inp != "":
+          if inp[-1] == "A":
+            sendBattle()
+        else:
+          tx = processIRRemote()
+          if tx == "Source":
+            createBattle()
 
 thread = threading.Thread(target=main)
 thread.start()
