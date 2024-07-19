@@ -135,8 +135,8 @@ def refreshMagicianState():
   global hp, psions, inBattle
   r = requests.get(f'{backend_uri}/magician/get-state?user_id={uid}')
   data = r.json()
-  hp = data[0]
-  psions = data[1]
+  hp = data[1]
+  psions = data[2]
   if hp <= 0:
     display("YOU LOST")
     time.sleep(10)
