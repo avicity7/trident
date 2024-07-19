@@ -82,6 +82,7 @@ def checkInBattle():
 ot1 = ""
 ot2 = ""
 def display(t1, t2=""):
+  global ot1, ot2
   if t1 != ot1 or t2 != ot2:
     lcd.clear()
     lcd.cursor_position(0, 0)# column,row
