@@ -17,7 +17,7 @@ def CreateBattle(p2):
   return [battle_id, confirmation]
 
 def GetCurrentBattle(uid):
-  cur.execute("SELECT * FROM battle WHERE winner = NULL AND (p1 = %s OR p2 = %s)", [uid, uid])
+  cur.execute("SELECT * FROM battle WHERE winner = '00000000-0000-0000-0000-000000000000' AND (p1 = %s OR p2 = %s)", [uid, uid])
   r = cur.fetchall() 
 
   return r
