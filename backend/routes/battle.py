@@ -8,10 +8,9 @@ battle = Blueprint('cad', __name__, url_prefix='/battle')
 def CreateBattle():
   req = request.get_json()
 
-  p1 = req["p1"]
   p2 = req["p2"]
   
-  return services.battle.CreateBattle(p1, p2)
+  return services.battle.CreateBattle(p2)
 
 @battle.route('/accept-battle', methods=["POST"])
 def AcceptBattle():
@@ -21,4 +20,8 @@ def AcceptBattle():
 
   return services.battle.AcceptBattle(battle_id)
 
+@battle.route('/get-current-battle', methods=["GET"])
+def GetCurrentBattle():
+  uid = request.args.get("uid")
 
+  return services.battle.GetCurrentBattle(uid)

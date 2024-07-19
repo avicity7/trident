@@ -1,16 +1,25 @@
 import config.db
+import random
 import services.magician
 cur = config.db.conn.cursor()
 conn = config.db.conn
 
 import uuid
 
-def CreateBattle(p1, p2):
-  values = [str(uuid.uuid4()), p1, p2, False, ""]
-  cur.execute("INSERT INTO battle(battle_id, p1, p2, accepted, winner)", values)  
+def CreateBattle(p2):
+  battle_id = str(uuid.uuid4())
+  confirmation = random.randint(100000, 999999)
+  values = [battle_id, "", p2, False, "", confirmation]
+  cur.execute("INSERT INTO battle(battle_id, p1, p2, accepted, winner, confirmation)", values)  
   conn.commit()
 
-  return "OK"
+  return [battle_id, confirmation]
+
+def GetCurrentBattle(uid):
+  cur.execute("SELECT * FROM battle WHERE winner = NULL AND (p1 = %s OR p2 = %s)", [uid, uid])
+  r = cur.fetchall() 
+
+  return r
 
 def AcceptBattle(battle_id):
   cur.execute("UPDATE battle SET accepted = true WHERE battle_id = %s", [battle_id])

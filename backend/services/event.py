@@ -4,12 +4,17 @@ import services.battle
 cur = config.db.conn.cursor()
 conn = config.db.conn
 
+def GetEventType(event_id):
+  cur.execute("SELECT * FROM cad_event_type WHERE event_id = %s", [event_id])
+  r = cur.fetchall()[0]
+  
+  return r
+
 def CreateEvent(battle_id, event_id, emitter):
   cur.execute("SELECT hp_effect, psion_cost FROM cad_event_type WHERE event_id = %s", [event_id])
   r = cur.fetchall()[0]
   hp_effect = r[0]
   psion_cost = r[1]
-# 
   cur.execute("INSERT INTO cad_event(battle_id, event_id, emitter) VALUES (%s, %s, %s)", [battle_id, event_id, emitter])
 
   cur.execute("SELECT psions FROM magician WHERE user_id = %s", [emitter])

@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
 import time
-import time
 import board
 import digitalio
 import adafruit_character_lcd.character_lcd as characterlcd

@@ -4,6 +4,12 @@ import services.event
 
 event = Blueprint('event', __name__, url_prefix='/event') 
 
+@event.route("/get-event-type", methods=["GET"])
+def GetEventType():
+  event_id = request.args.get("event_id")
+
+  return services.event.GetEventType(event_id)
+
 @event.route('/create-event', methods=["POST"])
 def CreateEvent():
   req = request.get_json()
