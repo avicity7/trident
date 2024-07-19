@@ -149,7 +149,7 @@ def createBattle():
   obj = {"p2": uid}
   r = requests.post(f'{backend_uri}/battle/create-battle', json=obj)
   data = r.json()
-  display("INCOMING BATTLE", data[1])
+  display("INCOMING BATTLE", str(data[1]))
 
   inp = ""
 
