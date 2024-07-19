@@ -9,7 +9,7 @@ import uuid
 def CreateBattle(p2):
   battle_id = str(uuid.uuid4())
   confirmation = random.randint(100000, 999999)
-  values = [battle_id, "00000000-0000-0000-0000-000000000000", p2, False, "", confirmation]
+  values = [battle_id, "00000000-0000-0000-0000-000000000000", p2, False, "00000000-0000-0000-0000-000000000000", confirmation]
   cur.execute("INSERT INTO battle(battle_id, p1, p2, accepted, winner, confirmation) VALUES (%s, %s, %s, %s, %s, %s)", values)  
   conn.commit()
 
