@@ -1,3 +1,4 @@
+import threading
 import requests
 import socketio
 import os
@@ -185,25 +186,17 @@ def sendBattle():
 getUserId()
 checkInBattle()
 
-while True:
-  with socketio.SimpleClient() as sio:
-    sio.connect(backend_uri)
+
+def main():
+  while True:
     if inBattle:
-      message = sio.receive()
-      if (message[0] == uid):
-        refreshMagicianState()
-      elif (message[0] == uid + "win"):
-        display("YOU WIN")
-        time.sleep(10)
-        inBattle = False
+      tx = processIRRemote()
+      if tx == "Power":
+        processEvent()
       else:
-        tx = processIRRemote()
-        if tx == "Power":
-          processEvent()
-        else:
-          readNumpad()
-          if inp[-1] == "#":
-            createEvent()
+        readNumpad()
+        if inp[-1] == "#":
+          createEvent()
 
     elif sentBattle:
       display("ENTER BATTLE CODE", inp)
@@ -212,15 +205,28 @@ while True:
         acceptBattle()
 
     else:
-      message = sio.receive()
-      if (message[0] == cad_id):
-        checkInBattle()
+      display("PRESS A TO", "START A BATTLE")
+      readNumpad()
+      if inp[-1] == "A":
+        sendBattle()
       else:
-        display("PRESS A TO", "START A BATTLE")
-        readNumpad()
-        if inp[-1] == "A":
-          sendBattle()
-        else:
-          tx = processIRRemote()
-          if tx == "Source":
-            createBattle()
+        tx = processIRRemote()
+        if tx == "Source":
+          createBattle()
+
+thread = threading.Thread(target=main)
+thread.start()
+
+with socketio.SimpleClient() as sio:
+  sio.connect(backend_uri)
+  message = sio.receive()
+  if inBattle:
+    if (message[0] == uid):
+      refreshMagicianState()
+    elif (message[0] == uid + "win"):
+      display("YOU WIN")
+      time.sleep(10)
+      inBattle = False
+  else:
+    if (message[0] == cad_id):
+      checkInBattle()
