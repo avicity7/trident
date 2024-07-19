@@ -76,13 +76,12 @@ def checkInBattle():
   inBattle = len(p) > 0
   if inBattle: refreshMagicianState()
 
-def display(t1, t2):
+def display(t1, t2=""):
   lcd.clear()
   lcd.cursor_position(0, 0)# column,row
   lcd.message = t1
-  if t2:
-    lcd.cursor_position(0, 1)
-    lcd.message = t2
+  lcd.cursor_position(0, 1)
+  lcd.message = t2
 
 def readLine(line, characters):
 	global inp
