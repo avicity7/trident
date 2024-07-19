@@ -199,10 +199,12 @@ def main():
           createEvent()
 
     elif sentBattle:
-      display("ENTER BATTLE CODE", inp)
+      display("ENTER CODE", inp)
       readNumpad()
       if inp[-1] == "A":
         acceptBattle()
+      elif inp[-1] == "D":
+        sentBattle = False
 
     else:
       display("PRESS A TO", "START A BATTLE")
