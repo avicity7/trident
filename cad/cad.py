@@ -157,7 +157,8 @@ def acceptBattle():
   global sentBattle, uid
   obj = {"confirmation": inp[:-1], "uid": uid}  
   r = requests.post(f'{backend_uri}/battle/accept-battle', json=obj)
-  if r == "OK":
+  data = r.json()
+  if data[0] == "OK":
     checkInBattle()
     sentBattle = False
   else:
@@ -214,6 +215,8 @@ def main():
       if inp != "":
         if inp[-1] == "A":
           acceptBattle()
+        elif inp[-1] == "C":
+          inp = inp[:-2]
         elif inp[-1] == "D":
           sentBattle = False
 

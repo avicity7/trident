@@ -33,9 +33,9 @@ def AcceptBattle(confirmation, uid):
     socketio.emit(p1)
     socketio.emit(p2)
 
-    return "OK"
+    return ["OK"]
   except:
-    return "ERROR"
+    return ["ERROR"]
 
 def EndBattle(battle_id, winner, p1, p2):
   values = [winner, battle_id]
