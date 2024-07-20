@@ -142,7 +142,7 @@ def refreshMagicianState():
     time.sleep(10)
     inBattle = False
   else:
-    display(f'HP: {hp}', f'Psions: {psions}')
+    display(f'HP: {hp} PSI: {psions}')
 
 def createBattle():
   global inp
@@ -167,7 +167,7 @@ def acceptBattle():
     sentBattle = False
 
 def createEvent():
-  global uid, battle_id
+  global uid, battle_id, inp
   code = inp[:-1]
   r = requests.get(f'{backend_uri}/event/get-event-type?event_id={code}')
   res = r.json()
@@ -205,6 +205,7 @@ def main():
         processEvent()
       else:
         readNumpad()
+        display(ot1, inp)
         if inp != "":
           if inp[-1] == "#":
             createEvent()
