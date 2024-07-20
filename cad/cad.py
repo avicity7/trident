@@ -205,7 +205,10 @@ def main():
         processEvent()
       else:
         readNumpad()
-        display(ot1, inp)
+        if ot1 != "INCORRECT MAGIC":
+          display(ot1, inp)
+        else:
+          display(f'HP: {hp} PSI: {psions}', inp)
         if inp != "":
           if inp[-1] == "#":
             createEvent()
