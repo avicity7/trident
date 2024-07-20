@@ -11,12 +11,11 @@ def GetEventType(event_id):
   return r
 
 def CreateEvent(battle_id, event_id, emitter):
-  cur.execute("SELECT * FROM cad_event_type WHERE event_id = %s", [event_id])
-  r = cur.fetchall()
-  if len(r) > 0:
+  try:
+    cur.execute("SELECT * FROM cad_event_type WHERE event_id = %s", [event_id])
     cur.execute("INSERT INTO cad_event(battle_id, event_id, emitter) VALUES (%s, %s, %s)", [battle_id, event_id, emitter])
     return ["OK"]
-  else:
+  except:
     return ["ERROR"]
 
 def ProcessEvent(battle_id, uid):
