@@ -154,7 +154,7 @@ def createBattle():
   inp = ""
 
 def acceptBattle():
-  global sentBattle, uid
+  global sentBattle, uid, inp
   obj = {"confirmation": inp[:-1], "uid": uid}  
   r = requests.post(f'{backend_uri}/battle/accept-battle', json=obj)
   data = r.json()
@@ -165,6 +165,8 @@ def acceptBattle():
     display("WRONG BATTLE", "CODE")
     time.sleep(2)
     sentBattle = False
+  
+  inp = ""
 
 def createEvent():
   global uid, battle_id, inp
@@ -210,8 +212,12 @@ def main():
         else:
           display(f'HP: {hp} PSI: {psions}', inp)
         if inp != "":
-          if inp[-1] == "#":
+          if inp[-1] == "A":
             createEvent()
+          elif inp[-1] == "C":
+            inp = inp[:-2]
+          elif inp[-1] == "D":
+            inp = ""
 
     elif sentBattle:
       display("ENTER CODE", inp)
