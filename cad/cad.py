@@ -248,16 +248,17 @@ def main():
 thread = threading.Thread(target=main)
 thread.start()
 
-with socketio.SimpleClient() as sio:
-  sio.connect(backend_uri)
-  message = sio.receive()
-  if inBattle:
-    if (message[0] == uid):
-      refreshMagicianState()
-    elif (message[0] == uid + "win"):
-      display("YOU WIN")
-      time.sleep(10)
-      inBattle = False
-  else:
-    if (message[0] == uid):
-      checkInBattle()
+while True:
+  with socketio.SimpleClient() as sio:
+    sio.connect(backend_uri)
+    message = sio.receive()
+    if inBattle:
+      if (message[0] == uid):
+        refreshMagicianState()
+      elif (message[0] == uid + "win"):
+        display("YOU WIN")
+        time.sleep(10)
+        inBattle = False
+    else:
+      if (message[0] == uid):
+        checkInBattle()
