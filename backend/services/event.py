@@ -36,7 +36,7 @@ def ProcessEvent(battle_id, uid):
   p1 = r[0]
   p2 = r[1]
   receiver = ""
-  if (p1 == receiver):
+  if (p1 == emitter):
     receiver = p2
   else:
     receiver = p1
