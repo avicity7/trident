@@ -176,6 +176,9 @@ def createEvent():
   data = r.json()
   if data[0] == "OK":
     os.system('irsend SEND_ONCE epson Power')
+    display(data[1], "casted!")
+    time.sleep(0.5)
+    refreshMagicianState()
   else:
     display("INCORRECT MAGIC", "SEQUENCE")
     time.sleep(0.5)

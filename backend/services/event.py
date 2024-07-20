@@ -12,9 +12,10 @@ def GetEventType(event_id):
 
 def CreateEvent(battle_id, event_id, emitter):
   try:
-    cur.execute("SELECT * FROM cad_event_type WHERE event_id = %s", [event_id])
+    r = cur.execute("SELECT event_name FROM cad_event_type WHERE event_id = %s", [event_id])
+    name = r[0][0]
     cur.execute("INSERT INTO cad_event(battle_id, event_id, emitter) VALUES (%s, %s, %s)", [battle_id, event_id, emitter])
-    return ["OK"]
+    return ["OK", name]
   except:
     return ["ERROR"]
 
