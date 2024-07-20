@@ -169,11 +169,10 @@ def acceptBattle():
 def createEvent():
   global uid, battle_id, inp
   code = inp[:-1]
-  r = requests.get(f'{backend_uri}/event/get-event-type?event_id={code}')
-  res = r.json()
   obj = {"emitter": uid, "event_id": code, "battle_id": battle_id}
-  if len(res) > 0:
-    r = requests.post(f'{backend_uri}/event/create-event', json=obj)
+  r = requests.post(f'{backend_uri}/event/create-event', json=obj)
+  data = r.json()
+  if data[0] == "OK":
     os.system('irsend SEND_ONCE epson Power')
   else:
     display("INCORRECT MAGIC", "SEQUENCE")
