@@ -31,7 +31,7 @@ def ProcessEvent(battle_id, uid):
   new_psions = psion_count - psion_cost
   cur.execute("UPDATE magician SET psions = %s WHERE user_id = %s", [new_psions, emitter])
 
-  cur.execute("SELECT p1, p2 FROM battle_id WHERE battle_id = %s", [battle_id])
+  cur.execute("SELECT p1, p2 FROM battle WHERE battle_id = %s", [battle_id])
   r = cur.fetchall()[0]
   p1 = r[0]
   p2 = r[1]
@@ -46,11 +46,11 @@ def ProcessEvent(battle_id, uid):
   receiver_hp = r[0]
   new_receiver_hp = receiver_hp + hp_effect
   if (new_receiver_hp <= 0):
-   services.battle.EndBattle(battle_id, emitter, p1, p2) 
+    services.battle.EndBattle(battle_id, emitter, p1, p2) 
+    socketio.emit(emitter + "win")
   else:
     cur.execute("UPDATE magician SET hp = %s WHERE user_id = %s", [new_receiver_hp, receiver])
+    socketio.emit(receiver)
   
   conn.commit()
-  socketio.emit(receiver)
-  socketio.emit(emitter + "win")
   return "OK"
