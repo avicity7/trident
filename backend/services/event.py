@@ -19,7 +19,7 @@ def CreateEvent(battle_id, event_id, emitter):
     return ["ERROR"]
 
 def ProcessEvent(battle_id, uid):
-  cur.execute("SELECT hp_effect, psion_cost, emitter FROM cad_event ce JOIN cad_event_type cet ON ce.event_id = cet.event_id JOIN battle b ON ce.battle_id = b.battle_id WHERE b.battle_id = %s & (p1 = %s OR p2 = %s) ORDER BY timestamp DESC", [battle_id, uid, uid])
+  cur.execute("SELECT hp_effect, psion_cost, emitter FROM cad_event ce JOIN cad_event_type cet ON ce.event_id = cet.event_id JOIN battle b ON ce.battle_id = b.battle_id WHERE b.battle_id = %s AND (p1 = %s OR p2 = %s) ORDER BY timestamp DESC", [battle_id, uid, uid])
   r = cur.fetchall()[0]
   hp_effect = r[0]
   psion_cost = r[1]
