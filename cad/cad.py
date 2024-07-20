@@ -177,6 +177,7 @@ def createEvent():
     os.system('irsend SEND_ONCE epson Power')
   else:
     display("INCORRECT MAGIC", "SEQUENCE")
+    time.sleep(0.5)
 
   inp = ""
 

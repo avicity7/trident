@@ -11,9 +11,13 @@ def GetEventType(event_id):
   return r
 
 def CreateEvent(battle_id, event_id, emitter):
-  cur.execute("SELECT hp_effect, psion_cost FROM cad_event_type WHERE event_id = %s", [event_id])
-  r = cur.fetchall()[0]
-  cur.execute("INSERT INTO cad_event(battle_id, event_id, emitter) VALUES (%s, %s, %s)", [battle_id, event_id, emitter])
+  cur.execute("SELECT * FROM cad_event_type WHERE event_id = %s", [event_id])
+  r = cur.fetchall()
+  if len(r) > 0:
+    cur.execute("INSERT INTO cad_event(battle_id, event_id, emitter) VALUES (%s, %s, %s)", [battle_id, event_id, emitter])
+    return ["OK"]
+  else:
+    return ["ERROR"]
 
 def ProcessEvent(battle_id, uid):
   cur.execute("SELECT hp_effect, psion_cost, emitter FROM cad_event ce JOIN cad_event_type cet ON ce.event_id = cet.event_id JOIN battle b ON ce.battle_id = b.battle_id WHERE b.battle_id = %s & (p1 = %s OR p2 = %s) ORDER BY timestamp DESC", [battle_id, uid, uid])
