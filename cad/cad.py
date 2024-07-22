@@ -265,7 +265,7 @@ while True:
         display("YOU WIN")
         time.sleep(10)
         checkInBattle()
-      elif (message[0] == uid + "lose"):
+      elif (len(message) > 1):
         win = True
         display("YOU LOSE")
         time.sleep(10)

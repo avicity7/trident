@@ -49,8 +49,7 @@ def ProcessEvent(battle_id, uid):
   new_receiver_hp = receiver_hp + hp_effect
   if (new_receiver_hp <= 0):
     services.battle.EndBattle(battle_id, emitter, p1, p2) 
-    socketio.emit(emitter + "win")
-    socketio.emit(receiver + "lose")
+    socketio.emit(emitter + "win", receiver + "lose")
   else:
     cur.execute("UPDATE magician SET hp = %s WHERE user_id = %s", [new_receiver_hp, receiver])
     socketio.emit(receiver)
