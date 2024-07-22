@@ -206,7 +206,7 @@ checkInBattle()
 
 
 def main():
-  global inBattle, sentBattle, inp, win, sending
+  global inBattle, sentBattle, inp, win, sending, ot1
   while True:
     if inBattle and not win == True:
       tx = processIRRemote()
