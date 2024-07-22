@@ -59,6 +59,8 @@ backend_uri = os.environ["BACKEND_URI"]
 cad_id = os.environ["CAD_ID"]
 uid = ""
 battle_id = ""
+win = False
+sending = False
 
 inp = ""
 hp = 100
@@ -169,20 +171,23 @@ def acceptBattle():
   inp = ""
 
 def createEvent():
-  global uid, battle_id, inp
-  code = inp[:-1]
-  obj = {"emitter": uid, "event_id": code, "battle_id": battle_id}
-  r = requests.post(f'{backend_uri}/event/create-event', json=obj)
-  data = r.json()
-  if data[0] == "OK":
-    os.system('irsend --device=/var/run/lirc/lircd-tx SEND_ONCE epson Power')
-    display(data[1], "casted!")
-    time.sleep(0.5)
-    refreshMagicianState()
-  else:
-    display("INCORRECT MAGIC", "SEQUENCE")
-    time.sleep(0.5)
+  global uid, battle_id, inp, sending
+  if not sending: 
+    sending = True
+    code = inp[:-1]
+    obj = {"emitter": uid, "event_id": code, "battle_id": battle_id}
+    r = requests.post(f'{backend_uri}/event/create-event', json=obj)
+    data = r.json()
+    if data[0] == "OK":
+      os.system('irsend --device=/var/run/lirc/lircd-tx SEND_ONCE epson Power')
+      display(data[1], "casted!")
+      time.sleep(0.5)
+      refreshMagicianState()
+    else:
+      display("INCORRECT MAGIC", "SEQUENCE")
+      time.sleep(0.5)
 
+  sending = False 
   inp = ""
 
 def processEvent():
@@ -202,9 +207,9 @@ checkInBattle()
 
 
 def main():
-  global inBattle, sentBattle, inp
+  global inBattle, sentBattle, inp, win
   while True:
-    if inBattle:
+    if inBattle and not win == True:
       tx = processIRRemote()
       if tx == "Power":
         processEvent()
@@ -256,9 +261,15 @@ while True:
       if (message[0] == uid):
         refreshMagicianState()
       elif (message[0] == uid + "win"):
+        win = True
         display("YOU WIN")
         time.sleep(10)
-        inBattle = False
+        checkInBattle()
+      elif (message[0] == uid + "lose"):
+        win = True
+        display("YOU LOSE")
+        time.sleep(10)
+        checkInBattle()
     else:
       if (message[0] == uid):
         checkInBattle()
