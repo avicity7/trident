@@ -239,7 +239,7 @@ def main():
           sentBattle = False
 
     else:
-      if not (ot1 in ["INCOMING BATTLE", "YOU WIN", "YOU LOSE"]):
+      if ot1 not in ["INCOMING BATTLE", "YOU WIN", "YOU LOSE"]:
         display("PRESS A TO", "START A BATTLE")
         readNumpad()
         if inp != "":
