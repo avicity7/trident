@@ -72,16 +72,13 @@ def getUserId():
   uid = r.json()[0][0]
 
 def checkInBattle():
-  global inBattle, battle_id, ot1, ot2
+  global inBattle, battle_id
   r = requests.get(f'{backend_uri}/battle/get-current-battle?uid={uid}')
   data = r.json()
   if len(data) > 0:
     battle_id = data[0][0]
     inBattle = True
     refreshMagicianState()
-  
-  ot1 = ""
-  ot2 = ""
     
 
 ot1 = ""
@@ -209,7 +206,7 @@ checkInBattle()
 
 
 def main():
-  global inBattle, sentBattle, inp, win, sending, ot1, ot2
+  global inBattle, sentBattle, inp, win, sending
   while True:
     if inBattle and not win == True:
       tx = processIRRemote()
@@ -242,7 +239,7 @@ def main():
           sentBattle = False
 
     else:
-      if ot1 == "":
+      if not ot1 in ["INCOMING BATTLE", "YOU WIN", "YOU LOSE"]:
         display("PRESS A TO", "START A BATTLE")
         readNumpad()
         if inp != "":
@@ -273,6 +270,7 @@ while True:
         display("YOU LOSE")
         time.sleep(10)
         checkInBattle()
+        display("")
     else:
       if (message[0] == uid):
         checkInBattle()
