@@ -175,7 +175,7 @@ def createEvent():
   r = requests.post(f'{backend_uri}/event/create-event', json=obj)
   data = r.json()
   if data[0] == "OK":
-    os.system('irsend SEND_ONCE epson Power')
+    os.system('irsend --device=/var/run/lirc/lircd-tx SEND_ONCE epson Power')
     display(data[1], "casted!")
     time.sleep(0.5)
     refreshMagicianState()
@@ -191,7 +191,7 @@ def processEvent():
 
 def sendBattle():
   global inp, sentBattle 
-  os.system('irsend SEND_ONCE epson Source')
+  os.system('irsend --device=/var/run/lirc/lircd-tx SEND_ONCE epson Source')
 
   inp = ""
   sentBattle = True
