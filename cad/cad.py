@@ -213,6 +213,7 @@ def main():
       if tx == "Power" and not sending:
         processEvent()
       else:
+        sending = False
         readNumpad()
         if ot1 != "INCORRECT MAGIC":
           display(ot1, inp)
@@ -225,7 +226,6 @@ def main():
             inp = inp[:-2]
           elif inp[-1] == "D":
             inp = ""
-      sending = False
 
     elif sentBattle:
       display("ENTER CODE", inp)
