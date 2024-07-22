@@ -187,7 +187,6 @@ def createEvent():
       display("INCORRECT MAGIC", "SEQUENCE")
       time.sleep(0.5)
 
-  sending = False 
   inp = ""
 
 def processEvent():
@@ -211,7 +210,7 @@ def main():
   while True:
     if inBattle and not win == True:
       tx = processIRRemote()
-      if tx == "Power":
+      if tx == "Power" and not sending:
         processEvent()
       else:
         readNumpad()
@@ -226,6 +225,7 @@ def main():
             inp = inp[:-2]
           elif inp[-1] == "D":
             inp = ""
+      sending = False
 
     elif sentBattle:
       display("ENTER CODE", inp)
