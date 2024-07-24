@@ -208,47 +208,48 @@ checkInBattle()
 def main():
   global inBattle, sentBattle, inp, win, sending, ot1
   while True:
-    if inBattle and not win == True:
-      tx = processIRRemote()
-      if tx == "Power" and not sending:
-        processEvent()
-      else:
-        sending = False
-        readNumpad()
-        if ot1 != "INCORRECT MAGIC":
-          display(ot1, inp)
+    if not win:
+      if inBattle:
+        tx = processIRRemote()
+        if tx == "Power" and not sending:
+          processEvent()
         else:
-          display(f'HP: {hp} PSI: {psions}', inp)
+          sending = False
+          readNumpad()
+          if ot1 != "INCORRECT MAGIC":
+            display(ot1, inp)
+          else:
+            display(f'HP: {hp} PSI: {psions}', inp)
+          if inp != "":
+            if inp[-1] == "A":
+              createEvent()
+            elif inp[-1] == "C":
+              inp = inp[:-2]
+            elif inp[-1] == "D":
+              inp = ""
+
+      elif sentBattle:
+        display("ENTER CODE", inp)
+        readNumpad()
         if inp != "":
           if inp[-1] == "A":
-            createEvent()
+            acceptBattle()
           elif inp[-1] == "C":
             inp = inp[:-2]
           elif inp[-1] == "D":
-            inp = ""
+            sentBattle = False
 
-    elif sentBattle:
-      display("ENTER CODE", inp)
-      readNumpad()
-      if inp != "":
-        if inp[-1] == "A":
-          acceptBattle()
-        elif inp[-1] == "C":
-          inp = inp[:-2]
-        elif inp[-1] == "D":
-          sentBattle = False
-
-    else:
-      if ot1 not in ["INCOMING BATTLE", "YOU WIN", "YOU LOSE"]:
-        display("PRESS A TO", "START A BATTLE")
-        readNumpad()
-        if inp != "":
-          if inp[-1] == "A":
-            sendBattle()
-        else:
-          tx = processIRRemote()
-          if tx == "Source":
-            createBattle()
+      else:
+        if ot1 not in ["INCOMING BATTLE", "YOU WIN", "YOU LOSE"]:
+          display("PRESS A TO", "START A BATTLE")
+          readNumpad()
+          if inp != "":
+            if inp[-1] == "A":
+              sendBattle()
+          else:
+            tx = processIRRemote()
+            if tx == "Source":
+              createBattle()
 
 thread = threading.Thread(target=main)
 thread.start()
