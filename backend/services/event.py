@@ -43,16 +43,27 @@ def ProcessEvent(battle_id, uid):
   else:
     receiver = p1
 
-  cur.execute("SELECT hp FROM magician WHERE user_id = %s", [receiver])
+  cur.execute("SELECT blocking FROM magician WHERE user_id = %s", [receiver])
   r = cur.fetchall()[0]
-  receiver_hp = r[0]
-  new_receiver_hp = receiver_hp + hp_effect
-  if (new_receiver_hp <= 0):
-    services.battle.EndBattle(battle_id, emitter, p1, p2) 
-    socketio.emit(emitter + "win", receiver + "lose")
+  blocking = r[0]
+
+  if not blocking:
+    cur.execute("SELECT hp FROM magician WHERE user_id = %s", [receiver])
+    r = cur.fetchall()[0]
+    receiver_hp = r[0]
+    new_receiver_hp = receiver_hp + hp_effect
+    if (new_receiver_hp <= 0):
+      services.battle.EndBattle(battle_id, emitter, p1, p2) 
+      socketio.emit(emitter + "win", receiver + "lose")
+    elif receiver_hp == new_receiver_hp:
+      cur.execute("UPDATE magician SET blocking = true", [new_receiver_hp, receiver])
+      socketio.emit(receiver)
+    else:
+      cur.execute("UPDATE magician SET hp = %s WHERE user_id = %s", [new_receiver_hp, receiver])
+      socketio.emit(receiver)
   else:
-    cur.execute("UPDATE magician SET hp = %s WHERE user_id = %s", [new_receiver_hp, receiver])
-    socketio.emit(receiver)
+      cur.execute("UPDATE magician SET blocking = false", [new_receiver_hp, receiver])
+    
   
   conn.commit()
   return "OK"

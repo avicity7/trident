@@ -2,7 +2,7 @@ from flask import request, Blueprint
 from __main__ import app
 import services.event_type
 
-event_type = Blueprint('event_type', __name__, url_prefix='/event_type') 
+event_type = Blueprint('event_type', __name__, url_prefix='/event-type') 
 
 @event_type.route('/create', methods=["POST"])
 def CreateEventType():
