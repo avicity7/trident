@@ -76,5 +76,5 @@ while True:
 	Gy = gyro_y/131.0
 	Gz = gyro_z/131.0
  
-	if Ax > 1 or Ay > 1 or Az > 1:
-	  print ("\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az) 	
+	if Ax > 1 or Ay > 1 or Gx > 30:
+	  print ("\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tGx=%.2f g" %Gx) 	
