@@ -89,7 +89,7 @@ def read_raw_data(addr):
   return value
 
 
-bus = smbus.SMBus(0)
+bus = smbus.SMBus(1)
 Device_Address = 0x68
 
 MPU_Init()
