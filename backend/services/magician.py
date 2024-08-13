@@ -4,19 +4,38 @@ cur = config.db.conn.cursor()
 conn = config.db.conn
 
 import uuid
+import bcrypt
 
 def CreateMagician(username, password):
   cur.execute("SELECT * FROM magician WHERE username = %s", [username])
   r = cur.fetchall()
+
+  s = bcrypt.gensalt()
+  password = str.encode(password)
+  password = bcrypt.hashpw(password, s).decode()
+
   if len(r) == 0:
     cur.execute("""
       INSERT INTO magician(user_id, username, password, hp)
       VALUES (%s, %s, %s, %s)
     """, (str(uuid.uuid4()), username, password, 100))
     conn.commit()
-    return "OK"
+    return {"response": "OK"}
   else: 
-    return "EXISTING USERNAME"
+    return {"response": "EXISTING"}
+
+def LoginMagician(username, password):
+  cur.execute("SELECT * FROM magician WHERE username = %s", [username])
+  r = cur.fetchall()
+  if len(r):
+    hash = str.encode(r[0][2])
+    password = str.encode(password)
+    if bcrypt.checkpw(password, hash):
+      return {"response": "OK"}
+    else:
+      return {"response": "WRONG PASSWORD"}
+  else:
+    return {"response": "WRONG PASSWORD"}
 
 def GetAllMagicians():
   cur.execute("SELECT * FROM magician")

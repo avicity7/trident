@@ -12,6 +12,15 @@ def CreateMagician():
 
   return services.magician.CreateMagician(username, password)
 
+@magician.route('/login', methods=["POST"])
+def LoginMagician():
+  req = request.get_json()
+
+  username = req['username']
+  password = req['password']
+
+  return services.magician.LoginMagician(username, password)
+
 @magician.route('/get-all-magicians', methods=["GET"])
 def GetAllMagicians():
   return services.magician.GetAllMagicians()
