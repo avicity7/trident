@@ -224,7 +224,7 @@ def acceptBattle():
   inp = ""
 
 def createEvent():
-  global uid, battle_id, inp, sending
+  global uid, battle_id, inp, sending, Ax, Ay, Gx
   if not sending: 
     sending = True
     code = inp[:-1]
@@ -234,13 +234,16 @@ def createEvent():
     if data[0] == "OK":
       os.system('irsend --device=/var/run/lirc/lircd-tx SEND_ONCE epson Power')
       display(data[1], "casted!")
-      time.sleep(0.5)
+      time.sleep(2)
       refreshMagicianState()
     else:
       display("INCORRECT MAGIC", "SEQUENCE")
       time.sleep(0.5)
 
   inp = ""
+  Ax = 0
+  Ay = 0
+  Gx = 0 
 
 def processEvent():
   obj = {"battle_id": battle_id, "uid": uid}
