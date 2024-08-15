@@ -9,9 +9,9 @@ def LinkDevice():
   req = request.get_json()
   
   cad_id = req["cad_id"] 
-  uid = req["uid"]
+  username = req["username"]
   
-  return services.cad.LinkDevice(cad_id, uid)
+  return services.cad.LinkDevice(cad_id, username)
 
 @cad.route('get-link', methods=["GET"])
 def GetLink():
