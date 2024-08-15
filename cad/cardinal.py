@@ -23,7 +23,7 @@ def DisplayMagician(username):
   Label(frame, text=f'Welcome {username}!').grid(row=0)
   Label(frame, text='CAD ID').grid(row=1)
   Entry(frame, textvariable=cad_id).grid(row=1, column=1)
-  Button(frame, text="Link CAD", command=lambda:LinkDevice(username, cad_id)).grid(row=2, column=1)
+  Button(frame, text="Link CAD", command=lambda:LinkDevice(username, cad_id.get())).grid(row=2, column=1)
 
 def Signup(username, password):
   o = {"username": username, "password": password}
