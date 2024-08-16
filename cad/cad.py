@@ -318,9 +318,9 @@ thread = threading.Thread(target=main)
 thread.start()
 
 def regen():
-  global uid, win
+  global uid, win, inBattle
   while True:
-    if not win:
+    if (not win) and inBattle:
       num = random.randint(0,100)
       if num == 50:
         o = {"uid": uid}
