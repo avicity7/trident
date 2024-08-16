@@ -323,7 +323,7 @@ def regen():
     num = random.randint(0,100)
     if num == 50:
       o = {"uid": uid}
-      requests.post()
+      requests.post(f'{backend_uri}/magician/regenerate', json=o)
     time.sleep(0.1)
 
 thread = threading.Thread(target=regen)
