@@ -315,6 +315,14 @@ def main():
 thread = threading.Thread(target=main)
 thread.start()
 
+def displayWL(message):
+  global win
+  win = True
+  display(message)
+  time.sleep(5)
+  checkInBattle()
+  return
+
 while True:
   with socketio.SimpleClient() as sio:
     sio.connect(backend_uri)
@@ -323,15 +331,11 @@ while True:
       if (message[0] == uid):
         refreshMagicianState()
       elif (message[0] == uid + "win"):
-        win = True
-        display("YOU WIN")
-        time.sleep(10)
-        checkInBattle()
+        thread = threading.Thread(target=lambda: displayWL("YOU WIN!"))
+        thread.start()
       elif (len(message) > 1):
-        win = True
-        display("YOU LOSE")
-        time.sleep(10)
-        checkInBattle()
+        thread = threading.Thread(target=lambda: displayWL("YOU WIN!"))
+        thread.start()
     else:
       if (message[0] == uid):
         checkInBattle()
