@@ -63,6 +63,7 @@ def UpdateMagicianHealth(uid, value):
 def RegeneratePsions(uid):
   cur.execute("UPDATE magician SET psions = psions + 10 WHERE user_id = %s", (uid))
   conn.commit()
+  socketio.emit(uid)
   return "OK"
   
 
