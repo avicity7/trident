@@ -61,7 +61,7 @@ def UpdateMagicianHealth(uid, value):
   return "OK"
 
 def RegeneratePsions(uid):
-  cur.execute("UPDATE magician SET psions = psions + 10 WHERE user_id = %s", (uid))
+  cur.execute("UPDATE magician SET psions = psions + 10 WHERE user_id = %s", [uid])
   conn.commit()
   socketio.emit(uid)
   return "OK"
@@ -76,6 +76,6 @@ def GetHistory(username):
   cur.execute("SELECT user_id FROM magician WHERE username = %s", [username])
   r = cur.fetchall()[0]
   uid = r[0]
-  cur.execute("SELECT * FROM battle WHERE p1 = %s OR p2 = %s", (uid))
+  cur.execute("SELECT * FROM battle WHERE p1 = %s OR p2 = %s", [uid])
   r = cur.fetchall()
   return r
