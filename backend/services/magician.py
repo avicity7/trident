@@ -60,6 +60,12 @@ def UpdateMagicianHealth(uid, value):
   conn.commit()
   return "OK"
 
+def RegeneratePsions(uid):
+  cur.execute("UPDATE magician SET psions = psions + 10 WHERE user_id = %s", (uid))
+  conn.commit()
+  return "OK"
+  
+
 def ResetMagicians(uid_1, uid_2):
   cur.execute("UPDATE magician SET hp = 100, psions = 100 WHERE user_id = %s OR user_id = %s", (uid_1, uid_2))
   conn.commit()

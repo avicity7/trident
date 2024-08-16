@@ -55,3 +55,9 @@ def GetHistory():
   username = req['username']
 
   return services.magician.GetHistory(username)
+
+@magician.route("/regenerate", methods=["POST"])
+def RegeneratePsions():
+  req = request.get_json()
+  uid = req['uid']
+  return services.magician.RegeneratePsions(uid)
