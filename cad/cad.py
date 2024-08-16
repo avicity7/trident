@@ -318,13 +318,14 @@ thread = threading.Thread(target=main)
 thread.start()
 
 def regen():
-  global uid
+  global uid, win
   while True:
-    num = random.randint(0,100)
-    if num == 50:
-      o = {"uid": uid}
-      requests.post(f'{backend_uri}/magician/regenerate', json=o)
-    time.sleep(0.1)
+    if not win:
+      num = random.randint(0,100)
+      if num == 50:
+        o = {"uid": uid}
+        requests.post(f'{backend_uri}/magician/regenerate', json=o)
+      time.sleep(0.1)
 
 thread = threading.Thread(target=regen)
 thread.start()
