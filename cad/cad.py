@@ -115,7 +115,7 @@ def getUserId():
   uid = r.json()[0][0]
 
 def checkInBattle():
-  global inBattle, battle_id
+  global inBattle, battle_id, win
   r = requests.get(f'{backend_uri}/battle/get-current-battle?uid={uid}')
   data = r.json()
   if len(data) > 0:
@@ -124,6 +124,7 @@ def checkInBattle():
     refreshMagicianState()
   else:
     inBattle = False
+    win = False
     
 
 ot1 = ""
@@ -334,7 +335,7 @@ while True:
         thread = threading.Thread(target=lambda: displayWL("YOU WIN!"))
         thread.start()
       elif (len(message) > 1):
-        thread = threading.Thread(target=lambda: displayWL("YOU WIN!"))
+        thread = threading.Thread(target=lambda: displayWL("YOU LOSE!"))
         thread.start()
     else:
       if (message[0] == uid):
