@@ -47,3 +47,11 @@ def ResetMagicians():
   uid_2 = req['uid_2']
   
   return services.magician.ResetMagicians(uid_1, uid_2)
+
+@magician.route('/get-history', methods=["POST"])
+def GetHistory():
+  req = request.get_json()
+
+  username = req['username']
+
+  return services.magician.GetHistory(username)

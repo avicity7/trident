@@ -122,6 +122,8 @@ def checkInBattle():
     battle_id = data[0][0]
     inBattle = True
     refreshMagicianState()
+  else:
+    inBattle = False
     
 
 ot1 = ""
@@ -330,7 +332,6 @@ while True:
         display("YOU LOSE")
         time.sleep(10)
         checkInBattle()
-        display("")
     else:
       if (message[0] == uid):
         checkInBattle()

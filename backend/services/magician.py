@@ -31,7 +31,12 @@ def LoginMagician(username, password):
     hash = str.encode(r[0][2])
     password = str.encode(password)
     if bcrypt.checkpw(password, hash):
-      return {"response": "OK"}
+      cur.execute("SELECT c.cad_id FROM magician m JOIN cad c ON c.user_id = m.user_id WHERE username = %s", [username])
+      try:
+        r = cur.fetchall()[0][0]
+        return {"response": r}
+      except:
+        return {"response": "OK"}
     else:
       return {"response": "WRONG PASSWORD"}
   else:
@@ -59,3 +64,11 @@ def ResetMagicians(uid_1, uid_2):
   cur.execute("UPDATE magician SET hp = 100, psions = 100 WHERE user_id = %s OR user_id = %s", (uid_1, uid_2))
   conn.commit()
   return "OK"
+
+def GetHistory(username):
+  cur.execute("SELECT user_id FROM magician WHERE username = %s", [username])
+  r = cur.fetchall()[0]
+  uid = r[0]
+  cur.execute("SELECT * FROM battle WHERE p1 = %s OR p2 = %s", (uid))
+  r = cur.fetchall()
+  return r
